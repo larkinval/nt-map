@@ -1,0 +1,215 @@
+/**
+ * НовТехГрупп — design tokens v0.1 (2026-09-30)
+ *
+ * Брендбука нет. Токен собран по решению владельца:
+ * - типографика — как в докладах конференции Paygine «Выше среднего II»:
+ *   широкий жирный гротеск в заголовках, ровный гротеск в тексте,
+ *   стрелочные списки, крупные номера 01/02/03, тонкие линии, «пилюли»;
+ * - цвета — из логотипа: чёрный основной, синий акцент;
+ * - фон белый, цветных градиентов референсов не используем.
+ *
+ * Шрифты: Roboto Flex на максимальной ширине (wdth 151) — ближайший
+ * бесплатный аналог широкого гротеска референсов; Golos Text — текст.
+ * Логотип: assets/novtech/novtech-logo.svg (трассировка с картинки,
+ * заменить на исходник дизайнера, когда появится).
+ *
+ * Слои: primitive → semantic → component. В компонентах сырой hex не пишем.
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Golos+Text:wght@400..900&family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&display=swap");
+
+/* === PRIMITIVES === */
+:root {
+  --nt-black: #141414;
+  --nt-ink-800: #2a2a2a;
+  --nt-ink-600: #595959;
+  --nt-ink-500: #767676;
+  --nt-ink-400: #9b9b9b;
+  --nt-ink-300: #c8c8c8;
+  --nt-ink-200: #e2e2e2;
+  --nt-ink-100: #efefef;
+  --nt-ink-50: #f6f6f6;
+  --nt-white: #ffffff;
+
+  --nt-blue-700: #0036c2;
+  --nt-blue-600: #0048ff; /* синий квадрат логотипа */
+  --nt-blue-100: #dde6ff;
+  --nt-blue-50: #f0f4ff;
+
+  /* метки аудиторий — маленькие точки на «пилюлях», не заливки */
+  --nt-aud-ads: #e4572e;
+  --nt-aud-eco: #f0a202;
+  --nt-aud-gov: #2e86ab;
+  --nt-aud-retail: #3a9d5d;
+  --nt-aud-city: #7768ae;
+  --nt-aud-spaces: #a26769;
+  --nt-aud-media: #d1495b;
+
+  --nt-font-display: "Roboto Flex", "Golos Text", system-ui, sans-serif;
+  --nt-font-text: "Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --nt-space-1: 4px;
+  --nt-space-2: 8px;
+  --nt-space-3: 12px;
+  --nt-space-4: 16px;
+  --nt-space-5: 24px;
+  --nt-space-6: 32px;
+  --nt-space-7: 48px;
+  --nt-space-8: 64px;
+  --nt-space-9: 96px;
+
+  --nt-radius-s: 4px;
+  --nt-radius-m: 8px;
+  --nt-radius-pill: 999px;
+
+  --nt-hairline: 1px;
+}
+
+/* === SEMANTIC === */
+:root {
+  color-scheme: light;
+
+  --nt-bg: var(--nt-white);
+  --nt-surface: var(--nt-ink-50);
+  --nt-text: var(--nt-black);
+  --nt-text-2: var(--nt-ink-600);
+  --nt-muted: var(--nt-ink-500);
+  --nt-line: var(--nt-ink-200);
+  --nt-line-strong: var(--nt-black);
+  --nt-accent: var(--nt-blue-600);
+  --nt-accent-hover: var(--nt-blue-700);
+  --nt-accent-tint: var(--nt-blue-50);
+  --nt-pill-bg: var(--nt-ink-100);
+  --nt-focus: var(--nt-blue-600);
+
+  /* типографическая шкала: display — широкий гротеск, text — Golos */
+  --nt-display-xl: clamp(36px, 5.2vw, 64px);
+  --nt-display-l: clamp(28px, 3.6vw, 44px);
+  --nt-display-m: clamp(22px, 2.4vw, 30px);
+  --nt-display-s: 19px;
+  --nt-display-xs: 15px;
+  --nt-label: 12px;
+
+  --nt-text-l: 19px;
+  --nt-text-m: 16px;
+  --nt-text-s: 14px;
+  --nt-text-xs: 12.5px;
+
+  --nt-display-weight: 760;
+  --nt-display-width: 151;
+}
+
+/* === BASE === */
+.nt-page {
+  background: var(--nt-bg);
+  color: var(--nt-text);
+  font-family: var(--nt-font-text);
+  font-size: var(--nt-text-m);
+  line-height: 1.45;
+  letter-spacing: -0.005em;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* === COMPONENTS === */
+
+/* Широкий заголовок, как в референсах */
+.nt-display {
+  font-family: var(--nt-font-display);
+  font-weight: var(--nt-display-weight);
+  font-stretch: 151%;
+  font-variation-settings: "wdth" var(--nt-display-width);
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+}
+
+/* Секционная метка: капс, акцентный цвет */
+.nt-label {
+  font-family: var(--nt-font-display);
+  font-weight: 700;
+  font-stretch: 151%;
+  font-variation-settings: "wdth" 151;
+  font-size: var(--nt-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--nt-accent);
+}
+
+/* Ключевая фраза — жирным широким в строке текста */
+.nt-key {
+  font-family: var(--nt-font-display);
+  font-weight: 720;
+  font-stretch: 151%;
+  font-variation-settings: "wdth" 151;
+  letter-spacing: -0.005em;
+}
+
+/* Список со стрелками «→» */
+.nt-arrows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.nt-arrows > li {
+  position: relative;
+  padding-left: 1.6em;
+  margin: 0.25em 0;
+}
+.nt-arrows > li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--nt-text);
+}
+
+/* Крупный номер 01/02/03 */
+.nt-num {
+  font-family: var(--nt-font-display);
+  font-weight: 800;
+  font-stretch: 151%;
+  font-variation-settings: "wdth" 151;
+  font-size: var(--nt-display-l);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+/* «Пилюля» — тег на сером фоне */
+.nt-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: var(--nt-radius-pill);
+  background: var(--nt-pill-bg);
+  color: var(--nt-text);
+  font-size: var(--nt-text-xs);
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.nt-pill .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+
+/* Тонкая линия-разделитель */
+.nt-rule {
+  border: 0;
+  border-top: var(--nt-hairline) solid var(--nt-line);
+  margin: 0;
+}
+
+/* Колонки с вертикальной волосяной линией, как 01 | 02 | 03 */
+.nt-cols {
+  display: grid;
+  gap: 0;
+}
+.nt-cols > * {
+  padding: 0 var(--nt-space-5);
+  border-left: var(--nt-hairline) solid var(--nt-line);
+}
+.nt-cols > *:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
