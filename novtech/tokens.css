@@ -250,15 +250,18 @@
  *
  * 1. Стекло — функциональный слой: панели навигации, кнопки управления,
  *    меню, оверлеи. Оно парит над контентом, контент просвечивает сквозь него.
- * 2. Контент (карточки, таблицы, текст) стеклом не делаем: он плотный,
- *    на тонких линиях. Отделить блок внутри контента — материал .nt-material-*
- *    (матовое стекло от тонкого к плотному) или тёмная плита .nt-smoke.
+ * 2. Контент (карточки, таблицы, текст) прозрачным Liquid Glass не делаем.
+ *    Карточки — матовое стекло (.nt-frost, .nt-material-*): главные плотнее,
+ *    второстепенные тоньше. Таблицы и текст — на тонких линиях. Тёмный
+ *    фундамент — плита .nt-smoke.
  * 3. Скупо: одна стеклянная панель на экран и одна витрина на материал.
  *    Стекло на стекло не кладём: кнопки внутри стеклянной панели — без стекла.
  * 4. Цвет на стекле — только у главного действия и только заливкой
  *    (.nt-glass--tint), не цветным текстом. Одна такая кнопка на экран.
  * 5. Прозрачный вариант (--clear) — только над насыщенным фоном: фото, видео,
  *    тёмный экран. Над светлым — с затемнением 35% (--dim), как у Apple.
+ * 5а. Фон в тёмной теме — живой свет .nt-ambient (шары фирменного синего),
+ *    блоки контента над ним матовые. Светлая тема — чисто белый фон.
  * 6. Витрина бренда — «прозрачный экран» White Box: стеклянная плита, сквозь
  *    которую контент виден чуть крупнее. Над фото — .nt-pane (HTML), над
  *    схемой — линза внутри SVG на токенах --nt-lens-*.
@@ -340,6 +343,15 @@
   --nt-lens-rim: rgba(255, 255, 255, 0.95);
   --nt-lens-line: rgba(0, 40, 140, 0.16);
   --nt-lens-shadow: rgba(0, 30, 90, 0.5);
+
+  /* живой свет за страницей (.nt-ambient) — только в тёмной теме;
+     светлая тема остаётся на чисто белом фоне (решение владельца 2026-10-03) */
+  --nt-ambient-display: none;
+  --nt-ambient-scale: 1.35;
+  --nt-ambient-1: rgba(0, 72, 255, 0.26);
+  --nt-ambient-2: rgba(110, 155, 255, 0.34);
+  --nt-ambient-3: rgba(0, 72, 255, 0.18);
+  --nt-ambient-4: rgba(150, 190, 255, 0.3);
 }
 
 /* === ТЁМНАЯ ТЕМА ===
@@ -427,6 +439,13 @@
   --nt-lens-rim: rgba(255, 255, 255, 0.4);
   --nt-lens-line: rgba(120, 155, 255, 0.3);
   --nt-lens-shadow: rgba(0, 0, 0, 0.9);
+
+  --nt-ambient-display: block;
+  --nt-ambient-scale: 1;
+  --nt-ambient-1: rgba(42, 98, 255, 0.42);
+  --nt-ambient-2: rgba(90, 130, 255, 0.34);
+  --nt-ambient-3: rgba(30, 80, 230, 0.36);
+  --nt-ambient-4: rgba(120, 160, 255, 0.24);
 }
 
 /* --- GLASS · COMPONENTS --- */
@@ -557,6 +576,22 @@
 .nt-stage__mark i.a { background: var(--nt-accent-fill); }
 .nt-stage__mark i.o { visibility: hidden; }
 
+/* Живой свет: за страницей медленно плавают размытые пятна фирменного синего —
+   стеклу есть что размывать. Только в тёмной теме, светлая — чисто белая. Слой один на страницу, первым ребёнком body:
+   <div class="nt-ambient" aria-hidden="true"><i></i><i></i><i></i><i></i></div>.
+   Фон тогда рисует корень с data-theme, у body он прозрачный. */
+.nt-page:has(> .nt-ambient) { background: transparent; }
+.nt-ambient { display: var(--nt-ambient-display); position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.nt-ambient i { position: absolute; border-radius: 50%; will-change: transform; }
+.nt-ambient i:nth-child(1) { width: calc(62vmax * var(--nt-ambient-scale)); height: calc(62vmax * var(--nt-ambient-scale)); left: -18vmax; top: -22vmax; background: radial-gradient(closest-side, var(--nt-ambient-1), transparent); animation: nt-drift-1 38s ease-in-out infinite alternate; }
+.nt-ambient i:nth-child(2) { width: calc(52vmax * var(--nt-ambient-scale)); height: calc(52vmax * var(--nt-ambient-scale)); right: -16vmax; top: 8vh; background: radial-gradient(closest-side, var(--nt-ambient-2), transparent); animation: nt-drift-2 46s ease-in-out infinite alternate; }
+.nt-ambient i:nth-child(3) { width: calc(44vmax * var(--nt-ambient-scale)); height: calc(44vmax * var(--nt-ambient-scale)); left: 22vw; bottom: -24vmax; background: radial-gradient(closest-side, var(--nt-ambient-3), transparent); animation: nt-drift-3 52s ease-in-out infinite alternate; }
+.nt-ambient i:nth-child(4) { width: calc(30vmax * var(--nt-ambient-scale)); height: calc(30vmax * var(--nt-ambient-scale)); left: 46vw; top: 26vh; background: radial-gradient(closest-side, var(--nt-ambient-4), transparent); animation: nt-drift-4 34s ease-in-out infinite alternate; }
+@keyframes nt-drift-1 { to { transform: translate(14vw, 18vh) scale(1.08); } }
+@keyframes nt-drift-2 { to { transform: translate(-18vw, 24vh) scale(0.92); } }
+@keyframes nt-drift-3 { to { transform: translate(12vw, -20vh) scale(1.12); } }
+@keyframes nt-drift-4 { to { transform: translate(-22vw, -12vh) scale(1.2); } }
+
 /* Матовое стекло для блоков контента над сценой: плотный материал, кромка,
    мягкая тень. Текст держит 4.5:1 даже над чёрным квадратом знака. */
 .nt-frost {
@@ -649,12 +684,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .nt-ambient i { animation: none; }
   .nt-glass-btn, .nt-pane { transition: none; }
   .nt-glass-btn:hover, .nt-glass-btn:active { transform: none; }
 }
 
 @media print {
-  .nt-stage__mark { display: none; }
+  .nt-stage__mark, .nt-ambient { display: none; }
   .nt-glass, .nt-glass-btn, .nt-frost,
   .nt-material-ultrathin, .nt-material-thin, .nt-material-regular, .nt-material-thick {
     background: var(--nt-raised);
