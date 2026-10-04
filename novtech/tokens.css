@@ -280,7 +280,10 @@
  * 10. Элемент управления на время касания становится стеклянной линзой:
  *    ползунок фильтра едет за пальцем прозрачной линзой и встаёт на место.
  * 11. Панель на длинной странице сжимается при прокрутке вниз до текущего
- *    раздела и главного действия, раскрывается при прокрутке вверх — плавно.
+ *    раздела и главного действия, раскрывается при прокрутке вверх — плавно,
+ *    с порогом (решаем по накопленной прокрутке, дрожание не дёргает панель).
+ *    На длинной странице — стеклянная кнопка «Наверх» справа внизу,
+ *    появляется после полутора экранов прокрутки.
  * 12. Край прокрутки: контент под панелью растворяется в фоне, а не обрезается.
  *
  * Варианты и доступность
@@ -345,6 +348,7 @@
   --nt-glass-tint-shadow: 0 10px 26px -10px rgba(0, 58, 222, 0.5);
   --nt-glass-glint: rgba(255, 255, 255, 0.95); /* блик за курсором */
   --nt-glass-press: rgba(0, 72, 255, 0.16);   /* ореол нажатия */
+  --nt-glass-press-glow: rgba(0, 72, 255, 0.2); /* свечение изнутри: на белом стекле белый блик не виден */
 
   /* дымчатое стекло — тёмные плиты, как выключенный прозрачный экран */
   --nt-smoke-fill: linear-gradient(180deg, #242424 0%, #161616 55%, #0e0e0e 100%);
@@ -450,6 +454,7 @@
   --nt-glass-tint-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 28px -10px rgba(42, 98, 255, 0.55);
   --nt-glass-glint: rgba(255, 255, 255, 0.16);
   --nt-glass-press: rgba(91, 134, 255, 0.22);
+  --nt-glass-press-glow: rgba(140, 175, 255, 0.32);
 
   --nt-smoke-fill: linear-gradient(180deg, #222225 0%, #19191c 55%, #141416 100%);
   --nt-smoke-rim: inset 0 1px 0 rgba(255, 255, 255, 0.13), inset 0 0 0 1px rgba(255, 255, 255, 0.07);
@@ -630,7 +635,10 @@
   transition: --ga 300ms var(--nt-ease-out);
 }
 .nt-glass-live:hover::after { --ga: 0.55; }
-.nt-glass-live.nt-press::after { animation: nt-press 650ms var(--nt-ease-out); }
+.nt-glass-live.nt-press::after {
+  background: radial-gradient(var(--gr) circle at var(--gx, 50%) var(--gy, 50%), var(--nt-glass-press-glow), transparent 72%);
+  animation: nt-press 650ms var(--nt-ease-out);
+}
 .nt-glass.nt-glass-live.nt-press { box-shadow: 0 0 0 1px var(--nt-glass-edge), var(--nt-glass-rim), 0 0 0 4px var(--nt-glass-press), var(--nt-glass-shadow-hi); }
 @keyframes nt-press { 0% { --gr: 24px; --ga: 1; } 100% { --gr: 260px; --ga: 0.55; } }
 

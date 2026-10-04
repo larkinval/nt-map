@@ -58,22 +58,22 @@
     if (!f) { f = document.createElementNS(NS, "filter"); f.id = id; defs.append(f); }
     if (f.dataset.size !== w + "x" + h) {
       f.dataset.size = w + "x" + h;
-      f.setAttribute("x", "0"); f.setAttribute("y", "0"); f.setAttribute("width", w); f.setAttribute("height", h);
+      // область фильтра с запасом и нейтральная заливка вне карты: пока элемент меняет
+      // размер, стекло не пропадает и не «щёлкает», карта просто догоняет размер
+      f.setAttribute("x", "0"); f.setAttribute("y", "0"); f.setAttribute("width", "4000"); f.setAttribute("height", "400");
       f.setAttribute("filterUnits", "userSpaceOnUse"); f.setAttribute("color-interpolation-filters", "sRGB");
       const r = Math.min(parseFloat(getComputedStyle(el).borderTopLeftRadius) || 22, h / 2);
-      f.innerHTML = `<feImage href="${lensMap(w, h, r, 20)}" x="0" y="0" width="${w}" height="${h}" preserveAspectRatio="none" result="map"/><feDisplacementMap in="SourceGraphic" in2="map" scale="64" xChannelSelector="R" yChannelSelector="G"/>`;
+      f.innerHTML = `<feFlood flood-color="rgb(128,128,128)" result="neutral"/><feImage href="${lensMap(w, h, r, 20)}" x="0" y="0" width="${w}" height="${h}" preserveAspectRatio="none" result="edge"/><feComposite in="edge" in2="neutral" operator="over" result="map"/><feDisplacementMap in="SourceGraphic" in2="map" scale="64" xChannelSelector="R" yChannelSelector="G"/>`;
     }
     const v = `url(#${id}) blur(10px) saturate(170%)`;
     el.style.backdropFilter = v; el.style.webkitBackdropFilter = v;
   }
-  function clearLens(el) { el.style.backdropFilter = ""; el.style.webkitBackdropFilter = ""; }
   const timers = new WeakMap();
   const ro = typeof ResizeObserver === "function" ? new ResizeObserver((entries) => {
-    // пока элемент меняет размер (сжатие, раскрытие) — обычное стекло, линза вернётся, когда размер успокоится
+    // карту пересобираем, когда размер успокоится; пока идёт анимация — работает старая
     entries.forEach(({ target }) => {
-      clearLens(target);
       clearTimeout(timers.get(target));
-      timers.set(target, setTimeout(() => applyLens(target), 220));
+      timers.set(target, setTimeout(() => applyLens(target), 160));
     });
   }) : null;
   function lens(els) {
