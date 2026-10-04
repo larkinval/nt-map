@@ -1,9 +1,11 @@
 /**
- * НовТехГрупп — design tokens v0.2 (2026-10-03)
+ * НовТехГрупп — design tokens v0.3 (2026-10-04)
  *
  * v0.2 — слой стекла по мотивам Apple Liquid Glass (HIG, Materials):
  * флагман компании — прозрачный экран White Box, поэтому прозрачность
  * для нас не украшение, а характер бренда. Правила — в разделе GLASS ниже.
+ * v0.3 — живое стекло: группы-острова, преломление, свет, адаптивность,
+ * рост из источника. Поведение — novtech/glass.js.
  *
  * Брендбука нет. Токен собран по решению владельца:
  * - типографика — как в докладах конференции Paygine «Выше среднего II»:
@@ -248,30 +250,54 @@
  * По мотивам Apple Liquid Glass (HIG → Materials и Color, 2025), но в нашем
  * характере: наш фон, чёрный и синий из логотипа, наши шрифты.
  *
- * 1. Стекло — функциональный слой: панели навигации, кнопки управления,
- *    меню, оверлеи. Оно парит над контентом, контент просвечивает сквозь него.
- * 2. Контент (карточки, таблицы, текст) прозрачным Liquid Glass не делаем.
- *    Карточки — матовое стекло (.nt-frost, .nt-material-*): главные плотнее,
- *    второстепенные тоньше. Таблицы и текст — на тонких линиях. Тёмный
+ * Принципы (HIG Materials, Toolbars, Color, «Adopting Liquid Glass», WWDC25
+ * «Meet Liquid Glass»). Применяем во всех материалах: страницы, презентации.
+ *
+ * Где стекло
+ * 1. Стекло — функциональный слой: навигация, кнопки, меню, листы. Оно парит
+ *    над контентом, контент просвечивает. Контент прозрачным стеклом не делаем:
+ *    карточки — матовое стекло (.nt-frost, .nt-material-*), главные плотнее,
+ *    второстепенные тоньше; таблицы и текст — на тонких линиях; тёмный
  *    фундамент — плита .nt-smoke.
- * 3. Скупо: одна стеклянная панель на экран и одна витрина на материал.
- *    Стекло на стекло не кладём: кнопки внутри стеклянной панели — без стекла.
- * 4. Цвет на стекле — только у главного действия и только заливкой
- *    (.nt-glass--tint), не цветным текстом. Одна такая кнопка на экран.
- * 5. Прозрачный вариант (--clear) — только над насыщенным фоном: фото, видео,
- *    тёмный экран. Над светлым — с затемнением 35% (--dim), как у Apple.
- * 5а. Фон в тёмной теме — живой свет .nt-ambient (шары фирменного синего),
- *    блоки контента над ним матовые. Светлая тема — чисто белый фон.
- * 6. Витрина бренда — «прозрачный экран» White Box: стеклянная плита, сквозь
- *    которую контент виден чуть крупнее. Над фото — .nt-pane (HTML), над
- *    схемой — линза внутри SVG на токенах --nt-lens-*.
- * 7. Доступность: текст на стекле — контраст 4.5:1 при любом фоне под ним.
- *    При «Уменьшить прозрачность», «Увеличить контраст», без backdrop-filter
- *    и в печати стекло становится плотным; при «Уменьшить движение» — без
- *    анимации.
+ * 2. Скупо. Стекло на стекло не кладём: внутри стеклянной группы кнопки —
+ *    без своего стекла, только заливка при наведении и выборе.
+ * 3. Группы-острова (.nt-glass-group) вместо одной полосы: не больше трёх
+ *    групп, между ними просвечивает контент. Похожие действия — в одной группе,
+ *    текст и иконки в одной группе не смешиваем.
+ * 4. Главное действие — одно, в конце панели, тонированным стеклом
+ *    (.nt-glass-prominent): цвет стекла, сквозь который чуть видно фон, а не
+ *    сплошная заливка. Цвет на стекле — только у главного действия.
+ * 5. Формы концентричны: радиус вложенного = радиус контейнера − отступ.
+ *
+ * Как стекло себя ведёт (novtech/glass.js)
+ * 6. Преломление: стекло изгибает свет у кромки, а не только размывает.
+ * 7. Свет: блик идёт за курсором, при нажатии стекло вспыхивает изнутри
+ *    от точки касания (.nt-glass-live).
+ * 8. Адаптивность: маленькое стекло темнеет над тёмным контентом (.on-dark),
+ *    крупное (меню, листы) — нет: большая площадь, мигание отвлекало бы.
+ * 9. Рост из источника: меню вырастает из своей кнопки, лист — из кнопки,
+ *    которая его открыла. Исчезает быстрее, чем появляется.
+ * 10. Элемент управления на время касания становится стеклянной линзой:
+ *    ползунок фильтра едет за пальцем прозрачной линзой и встаёт на место.
+ * 11. Панель на длинной странице сжимается при прокрутке вниз до текущего
+ *    раздела и главного действия, раскрывается при прокрутке вверх — плавно.
+ * 12. Край прокрутки: контент под панелью растворяется в фоне, а не обрезается.
+ *
+ * Варианты и доступность
+ * 13. Обычный вариант — везде. Прозрачный (--clear) — только над насыщенным
+ *     фоном (фото, видео) и с затемнением 35% (--dim). Варианты не смешиваем.
+ * 14. На белом стеклу нечего размывать: в тёмной теме за страницей живой свет
+ *     .nt-ambient, светлая тема — чисто белый фон.
+ * 15. Витрина бренда — «прозрачный экран» White Box: стеклянная плита, сквозь
+ *     которую контент виден чуть крупнее. Над фото — .nt-pane (HTML), над
+ *     схемой — линза внутри SVG на токенах --nt-lens-*.
+ * 16. Текст на стекле — контраст 4.5:1 при любом фоне. «Уменьшить
+ *     прозрачность», «Увеличить контраст», печать и браузеры без
+ *     backdrop-filter — плотное стекло; «Уменьшить движение» — без анимаций.
  *
  * .nt-glass и .nt-glass-btn заняты псевдоэлементом ::before (блик кромки),
- * .nt-pane и .nt-smoke — ::after. Свои псевдоэлементы на них не вешаем.
+ * .nt-pane, .nt-smoke и .nt-glass-live — ::after. Свои псевдоэлементы на них
+ * не вешаем.
  * ===================================================================== */
 
 /* --- GLASS · PRIMITIVES --- */
@@ -311,10 +337,14 @@
   --nt-glass-hover: rgba(20, 20, 20, 0.06);
   --nt-glass-selected: rgba(20, 20, 20, 0.08);
 
-  /* тонированное стекло — главное действие; белый текст 4.7:1 и выше */
-  --nt-glass-tint-fill: linear-gradient(180deg, rgba(26, 92, 255, 0.94) 0%, rgba(0, 58, 222, 0.94) 100%);
-  --nt-glass-tint-rim: inset 0 1px 0 rgba(255, 255, 255, 0.42), inset 0 -1px 0 rgba(0, 20, 90, 0.25);
-  --nt-glass-tint-shadow: 0 1px 2px rgba(0, 40, 140, 0.18), 0 10px 26px -10px rgba(0, 58, 222, 0.55);
+  /* тонированное стекло — главное действие: цвет стекла, сквозь него чуть
+     видно фон; тон темнее фирменного, чтобы на белом получился наш синий
+     и белый текст держал 5.8:1 */
+  --nt-glass-tint-fill: linear-gradient(180deg, rgba(0, 64, 222, 0.8) 0%, rgba(0, 46, 176, 0.82) 100%);
+  --nt-glass-tint-rim: inset 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+  --nt-glass-tint-shadow: 0 10px 26px -10px rgba(0, 58, 222, 0.5);
+  --nt-glass-glint: rgba(255, 255, 255, 0.95); /* блик за курсором */
+  --nt-glass-press: rgba(0, 72, 255, 0.16);   /* ореол нажатия */
 
   /* дымчатое стекло — тёмные плиты, как выключенный прозрачный экран */
   --nt-smoke-fill: linear-gradient(180deg, #242424 0%, #161616 55%, #0e0e0e 100%);
@@ -415,9 +445,11 @@
   --nt-glass-hover: rgba(255, 255, 255, 0.08);
   --nt-glass-selected: rgba(255, 255, 255, 0.12);
 
-  --nt-glass-tint-fill: linear-gradient(180deg, rgba(52, 110, 255, 0.95) 0%, rgba(34, 88, 245, 0.95) 100%);
-  --nt-glass-tint-rim: inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 10, 60, 0.35);
+  --nt-glass-tint-fill: linear-gradient(180deg, rgba(52, 110, 255, 0.78) 0%, rgba(34, 88, 245, 0.8) 100%);
+  --nt-glass-tint-rim: inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
   --nt-glass-tint-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 28px -10px rgba(42, 98, 255, 0.55);
+  --nt-glass-glint: rgba(255, 255, 255, 0.16);
+  --nt-glass-press: rgba(91, 134, 255, 0.22);
 
   --nt-smoke-fill: linear-gradient(180deg, #222225 0%, #19191c 55%, #141416 100%);
   --nt-smoke-rim: inset 0 1px 0 rgba(255, 255, 255, 0.13), inset 0 0 0 1px rgba(255, 255, 255, 0.07);
@@ -487,6 +519,8 @@
 
 /* Тонированное стекло — главное действие экрана */
 .nt-glass--tint {
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  backdrop-filter: blur(14px) saturate(180%);
   background: var(--nt-glass-tint-fill);
   color: var(--nt-on-accent);
   box-shadow: var(--nt-glass-tint-rim), var(--nt-glass-tint-shadow);
@@ -540,6 +574,74 @@
 .nt-glass-btn.nt-glass--tint:hover {
   box-shadow: var(--nt-glass-tint-rim), 0 2px 4px rgba(0, 40, 140, 0.2), 0 16px 34px -12px rgba(0, 58, 222, 0.6);
 }
+
+/* Группа-остров: несколько кнопок на одном стекле. Вместе с .nt-glass.
+   Высота 44, отступ 4 — вложенные капсулы 36 концентричны (22 − 4 = 18). */
+.nt-glass-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 22px;
+  transition: box-shadow var(--nt-dur-2) var(--nt-ease-out), background var(--nt-dur-3) var(--nt-ease-out), color var(--nt-dur-3);
+}
+
+/* Главное действие: капсула тонированного стекла. Одна на экран, в конце панели */
+.nt-glass-prominent {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 22px;
+  background: var(--nt-glass-tint-fill);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  backdrop-filter: blur(14px) saturate(180%);
+  box-shadow: var(--nt-glass-tint-rim), var(--nt-glass-tint-shadow);
+  color: var(--nt-on-accent);
+  font: inherit;
+  font-size: var(--nt-text-s);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: box-shadow var(--nt-dur-2) var(--nt-ease-out), transform var(--nt-dur-2) var(--nt-ease-spring);
+}
+.nt-glass-prominent:hover { transform: translateY(-1px); box-shadow: var(--nt-glass-tint-rim), 0 2px 4px rgba(0, 40, 140, 0.2), 0 14px 30px -12px rgba(0, 58, 222, 0.6); }
+.nt-glass-prominent:active { transform: scale(0.97); transition-duration: 90ms; }
+
+/* Свет: блик за курсором, вспышка изнутри при нажатии (координаты ставит glass.js) */
+@property --gr { syntax: "<length>"; inherits: false; initial-value: 110px; }
+@property --ga { syntax: "<number>"; inherits: false; initial-value: 0; }
+.nt-glass-live { position: relative; isolation: isolate; }
+.nt-glass-live::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(var(--gr) circle at var(--gx, 50%) var(--gy, 50%), var(--nt-glass-glint), transparent 72%);
+  opacity: var(--ga);
+  transition: --ga 300ms var(--nt-ease-out);
+}
+.nt-glass-live:hover::after { --ga: 0.55; }
+.nt-glass-live.nt-press::after { animation: nt-press 650ms var(--nt-ease-out); }
+.nt-glass.nt-glass-live.nt-press { box-shadow: 0 0 0 1px var(--nt-glass-edge), var(--nt-glass-rim), 0 0 0 4px var(--nt-glass-press), var(--nt-glass-shadow-hi); }
+@keyframes nt-press { 0% { --gr: 24px; --ga: 1; } 100% { --gr: 260px; --ga: 0.55; } }
+
+/* Адаптивность: маленькое светлое стекло над тёмным контентом темнеет (класс ставит glass.js) */
+.nt-glass.on-dark {
+  --nt-glass-glint: rgba(255, 255, 255, 0.18);
+  background: linear-gradient(180deg, rgba(44, 44, 48, 0.72) 0%, rgba(20, 20, 22, 0.64) 100%);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 14px 34px -14px rgba(0, 0, 0, 0.7);
+  color: var(--nt-white);
+}
+.nt-glass.on-dark::before { background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.06) 26%, transparent 50%, rgba(255, 255, 255, 0.2)); }
 
 /* Материалы контент-слоя: матовое стекло от тонкого к плотному */
 .nt-material-ultrathin,
@@ -669,7 +771,7 @@
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
-  .nt-glass--tint, .nt-glass-btn.nt-glass--tint { background: var(--nt-accent-fill); }
+  .nt-glass--tint, .nt-glass-btn.nt-glass--tint, .nt-glass-prominent { background: var(--nt-accent-fill); -webkit-backdrop-filter: none; backdrop-filter: none; }
   .nt-glass--smoke, .nt-glass--clear.nt-glass--dim { background: var(--nt-black); }
   .nt-pane { background: var(--nt-accent-tint); -webkit-backdrop-filter: none; backdrop-filter: none; }
 }
@@ -679,13 +781,14 @@
     background: var(--nt-raised);
     box-shadow: 0 0 0 1.5px var(--nt-text);
   }
-  .nt-glass--tint, .nt-glass-btn.nt-glass--tint { background: var(--nt-accent-fill); box-shadow: 0 0 0 1.5px var(--nt-text); }
+  .nt-glass--tint, .nt-glass-btn.nt-glass--tint, .nt-glass-prominent { background: var(--nt-accent-fill); box-shadow: 0 0 0 1.5px var(--nt-text); }
   .nt-glass--smoke { background: var(--nt-black); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .nt-ambient i { animation: none; }
-  .nt-glass-btn, .nt-pane { transition: none; }
+  .nt-glass-btn, .nt-pane, .nt-glass-prominent, .nt-glass-group { transition: none; }
+  .nt-glass-live::after { animation: none; transition: none; }
   .nt-glass-btn:hover, .nt-glass-btn:active { transform: none; }
 }
 
